@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Journaling</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="entry">Journal Entry</label>
+            <textarea class="form-control" id="entry" name="entry" rows="5"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+    {% if entry %}
+    <div class="mt-4">
+        <h4>Your Entry:</h4>
+        <p>{{ entry }}</p>
+        <h4>Benefits of Journaling:</h4>
+        <p>{{ advice }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

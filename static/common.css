@@ -1,0 +1,207 @@
+/* Common Styles */
+body {
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    background-attachment: fixed;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #4A90E2;
+    text-align: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Card Styles */
+.card {
+    margin-bottom: 20px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    font-weight: 500;
+    color: #007bff;
+}
+
+.card-icon {
+    font-size: 3rem;
+    color: #007bff;
+}
+
+.card-body {
+    text-align: center;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #7ED321;
+    border-color: #7ED321;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #69b311;
+    border-color: #69b311;
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styles */
+.header {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #007bff;
+}
+
+/* Specific Page Styles */
+
+/* Dashboard */
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+/* Mood Tracker */
+.tracker-header {
+    margin-bottom: 30px;
+}
+
+.tracker-form {
+    max-width: 600px;
+    margin: auto;
+}
+
+.tracker-form .form-group {
+    margin-bottom: 15px;
+}
+
+/* Recommendations */
+.recommendations-header {
+    margin-bottom: 30px;
+}
+
+.recommendations-list {
+    list-style: none;
+    padding: 0;
+}
+
+.recommendations-list li {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Achievements */
+.achievements-header {
+    margin-bottom: 30px;
+}
+
+.achievements-list {
+    list-style: none;
+    padding: 0;
+}
+
+.achievements-list li {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Resources */
+.resources-header {
+    margin-bottom: 30px;
+}
+
+.resources-list {
+    list-style: none;
+    padding: 0;
+}
+
+.resources-list li {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat Support */
+.chat-header {
+    margin-bottom: 30px;
+}
+
+.chat-messages {
+    list-style: none;
+    padding: 0;
+}
+
+.chat-messages li {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-messages .user-message {
+    text-align: right;
+    background: #007bff;
+    color: #fff;
+}
+
+/* Virtual Coach */
+.coach-header {
+    margin-bottom: 30px;
+}
+
+.coach-tips {
+    list-style: none;
+    padding: 0;
+}
+
+.coach-tips li {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Create Music */
+.music-header {
+    margin-bottom: 30px;
+}
+
+.music-form {
+    max-width: 600px;
+    margin: auto;
+}
+
+.music-form .form-group {
+    margin-bottom: 15px;
+}

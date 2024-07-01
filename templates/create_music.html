@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Create Music{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(to right, #1C1C1C, #2C3E50);
+        background-attachment: fixed;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+    }
+    .card {
+        margin-bottom: 20px;
+        border: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+        font-weight: 600;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.5px;
+    }
+    .form-control, .btn-primary {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ECF0F1;
+    }
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .btn-primary {
+        background-color: #3498DB;
+        border-color: #3498DB;
+        transition: background-color 0.3s, border-color 0.3s;
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+    .btn-primary:hover {
+        background-color: #2980B9;
+        border-color: #2980B9;
+    }
+    .dashboard-header, .subheader {
+        text-align: center;
+    }
+    .dashboard-header {
+        margin-bottom: 15px;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+    }
+    .subheader {
+        margin-bottom: 30px;
+        color: #ECF0F1;
+        font-size: 1.5rem;
+    }
+    .container {
+        max-width: 800px;
+    }
+    .generated-music-container {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .music-title {
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .generated-lyrics {
+        color: #ECF0F1;
+        white-space: pre-wrap; /* To preserve whitespace and line breaks */
+    }
+</style>
+<!-- Include Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="dashboard-header">Create Music</h1>
+    <h5 class="subheader">Generate custom music based on your preferences</h5>
+    <div class="card">
+        <div class="card-body">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="music_style" class="form-label">Music Style</label>
+                    <input type="text" class="form-control" id="music_style" name="music_style" placeholder="Enter music style..." required>
+                </div>
+                <div class="form-group">
+                    <label for="mood" class="form-label">Mood</label>
+                    <input type="text" class="form-control" id="mood" name="mood" placeholder="Enter mood..." required>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title..." required>
+                </div>
+                <div class="form-group">
+                    <label for="make_instrumental" class="form-label">Make Instrumental</label>
+                    <select class="form-control" id="make_instrumental" name="make_instrumental" required>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Generate Music</button>
+            </form>
+        </div>
+    </div>
+    {% if music %}
+    <div class="generated-music-container">
+        <h2 class="music-title">Generated Music</h2>
+        <h3 class="music-title">Lyrics:</h3>
+        <pre class="generated-lyrics">{{ lyrics }}</pre>
+        {% if music.error %}
+            <p class="text-danger">{{ music.error }}</p>
+        {% else %}
+            <audio controls>
+                <source src="{{ music }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        {% endif %}
+    </div>
+    {% endif %}
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</a>
+</div>
+{% endblock %}

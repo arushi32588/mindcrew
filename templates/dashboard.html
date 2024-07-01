@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(to right, #1C1C1C, #2C3E50);
+        background-attachment: fixed;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+    }
+    .card {
+        margin-bottom: 20px;
+        border: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+        font-weight: 600;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.5px;
+    }
+    .card-icon {
+        font-size: 3rem;
+        color: #ECF0F1;
+    }
+    .dashboard-header {
+        margin-bottom: 15px;
+        text-align: center;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+    .subheader {
+        margin-bottom: 30px;
+        text-align: center;
+        color: #BDC3C7;
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+    .container {
+        max-width: 1200px;
+    }
+    .btn-primary {
+        background-color: #3498DB;
+        border-color: #3498DB;
+        transition: background-color 0.3s, border-color 0.3s;
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+    .btn-primary:hover {
+        background-color: #2980B9;
+        border-color: #2980B9;
+    }
+    .card-text {
+        color: #BDC3C7;
+    }
+</style>
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Include Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="dashboard-header">Welcome to Your Mental Health Companion</h1>
+    <h5 class="subheader">Your one-stop guide to keep your mind in check</h5>
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <h5 class="card-title">Mood Tracker</h5>
+                    <p class="card-text">Track your daily mood and view trends over time.</p>
+                    <a href="{{ url_for('mood_tracker.index') }}" class="btn btn-primary">Go to Mood Tracker</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h5 class="card-title">Recommendations</h5>
+                    <p class="card-text">Get personalized recommendations based on your mood.</p>
+                    <a href="{{ url_for('mood_tracker.recommendations') }}" class="btn btn-primary">View Recommendations</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h5 class="card-title">Achievements</h5>
+                    <p class="card-text">See your achievements and progress over time.</p>
+                    <a href="{{ url_for('achievements') }}" class="btn btn-primary">View Achievements</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h5 class="card-title">Resources</h5>
+                    <p class="card-text">Access various mental health resources and information.</p>
+                    <a href="{{ url_for('resources.index') }}" class="btn btn-primary">View Resources</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h5 class="card-title">Chat Support</h5>
+                    <p class="card-text">Get support and answers to your mental health queries.</p>
+                    <a href="{{ url_for('chat_support.index') }}" class="btn btn-primary">Go to Chat Support</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-user-nurse"></i>
+                    </div>
+                    <h5 class="card-title">Virtual Mental Health Coach</h5>
+                    <p class="card-text">Get personalized mental health advice and exercises.</p>
+                    <a href="{{ url_for('coach') }}" class="btn btn-primary">Go to Virtual Coach</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h5 class="card-title">Stress Buster Beats</h5>
+                    <p class="card-text">Generate custom music based on your preferences as a stress buster.</p>
+                    <a href="{{ url_for('create_music') }}" class="btn btn-primary">Create Music</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="card-icon mb-3">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h5 class="card-title">Logout</h5>
+                    <p class="card-text">Logout from your account.</p>
+                    <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

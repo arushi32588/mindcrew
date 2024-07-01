@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Mood Tracker{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(to right, #1C1C1C, #2C3E50);
+        background-attachment: fixed;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+    }
+    .card {
+        margin-bottom: 20px;
+        border: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+        font-weight: 600;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.5px;
+    }
+    .form-control, .btn-primary {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ECF0F1;
+    }
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .btn-primary {
+        background-color: #3498DB;
+        border-color: #3498DB;
+        transition: background-color 0.3s, border-color 0.3s;
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+    .btn-primary:hover {
+        background-color: #2980B9;
+        border-color: #2980B9;
+    }
+    .chart-container {
+        position: relative;
+        height: 60vh;
+        width: 100%;
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    .chart-container canvas {
+        background-color: white;
+        border-radius: 10px;
+    }
+    .form-group label {
+        margin-right: 10px;
+        font-weight: 500;
+        color: #BDC3C7;
+    }
+    .dashboard-header, .subheader {
+        text-align: center;
+    }
+    .dashboard-header {
+        margin-bottom: 15px;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+    }
+    .subheader {
+        margin-bottom: 30px;
+        color: #ECF0F1;
+        font-size: 1.5rem;
+    }
+</style>
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Include Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="dashboard-header">Mood Tracker</h1>
+    <h5 class="subheader">Monitor your mood patterns and trends</h5>
+    <div class="card">
+        <div class="card-body">
+            <form id="mood-form" class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="date" class="mr-2">Date:</label>
+                    <input type="date" id="date" name="date" class="form-control mr-2" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="mood" class="mr-2">Mood (1-10):</label>
+                    <input type="number" id="mood" name="mood" class="form-control mr-2" min="1" max="10" required>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Add Mood</button>
+            </form>
+        </div>
+    </div>
+    <div id="mood-data" class="card mt-4">
+        <div class="card-body">
+            <h2 class="card-title">Mood Data</h2>
+            <ul id="mood-data-list"></ul>
+        </div>
+    </div>
+    <div id="mood-trend" class="card mt-4">
+        <div class="card-body">
+            <h2 class="card-title">Mood Trend</h2>
+            <div class="chart-container">
+                <canvas id="moodTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div id="mood-descriptions" class="card mt-4">
+        <div class="card-body">
+            <h2 class="card-title">Mood Descriptions</h2>
+            <ul>
+                {% for description in descriptions %}
+                    <li>{{ description }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
+<script>
+    document.getElementById('mood-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const date = document.getElementById('date').value;
+        const mood = document.getElementById('mood').value;
+
+        fetch('/mood_tracker/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ date: date, mood: mood })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            loadMoods();
+            loadMoodTrend();
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    function loadMoods() {
+        fetch('/mood_tracker/view')
+        .then(response => response.json())
+        .then(data => {
+            const moodDataList = document.getElementById('mood-data-list');
+            moodDataList.innerHTML = data.map(item => `<li>${item.date}: ${item.mood}</li>`).join('');
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function loadMoodTrend() {
+        fetch('/mood_tracker/trend')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Fetched trend data:', data); // Debug: Log the fetched data
+            const ctx = document.getElementById('moodTrendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.dates,
+                    datasets: [{
+                        label: 'Mood Over Time',
+                        data: data.moods,
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Ensures chart scales correctly
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 10
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    loadMoods();
+    loadMoodTrend();
+</script>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Support{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(to right, #1C1C1C, #2C3E50);
+        background-attachment: fixed;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+    }
+    .card {
+        margin-bottom: 20px;
+        border: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+        font-weight: 600;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.5px;
+    }
+    .form-control, .btn-primary {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ECF0F1;
+    }
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .btn-primary {
+        background-color: #3498DB;
+        border-color: #3498DB;
+        transition: background-color 0.3s, border-color 0.3s;
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+    .btn-primary:hover {
+        background-color: #2980B9;
+        border-color: #2980B9;
+    }
+    .dashboard-header, .subheader {
+        text-align: center;
+    }
+    .dashboard-header {
+        margin-bottom: 15px;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+    }
+    .subheader {
+        margin-bottom: 30px;
+        color: #ECF0F1;
+        font-size: 1.5rem;
+    }
+    #chat-box {
+        height: 400px;
+        overflow-y: scroll;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+        font-size: 1rem;
+    }
+    .chat-message {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    .chat-message.user {
+        text-align: right;
+        background-color: #3498DB;
+        color: #fff;
+    }
+    .chat-message.bot {
+        text-align: left;
+        background-color: #2C3E50;
+        color: #fff;
+    }
+    .chat-message strong {
+        display: block;
+        font-size: 0.9rem;
+        color: #ECF0F1;
+    }
+</style>
+<!-- Include Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="dashboard-header">Chat Support</h1>
+    <h5 class="subheader">Get support and answers to your mental health queries</h5>
+    <div id="chat-box" class="card">
+        <!-- Chat messages will be appended here -->
+    </div>
+    <form id="chat-form" class="form-inline mt-4">
+        <input type="text" id="message" name="message" class="form-control mr-2" placeholder="Type your message here" required>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</a>
+</div>
+
+<script>
+    document.getElementById('chat-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const message = document.getElementById('message').value;
+        document.getElementById('message').value = '';
+
+        fetch('/chat_support/message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += '<div class="chat-message user"><strong>You:</strong> ' + message + '</div>';
+            chatBox.innerHTML += '<div class="chat-message bot"><strong>Bot:</strong> ' + data.response + '</div>';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}

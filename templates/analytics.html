@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+<h1>Your Analytics</h1>
+<div id="analytics-charts">
+    <h2>Mood Over Time</h2>
+    <img src="{{ mood_trend_url }}" alt="Mood Trend" class="img-fluid">
+    <h2>Mood Distribution</h2>
+    <img src="{{ mood_distribution_url }}" alt="Mood Distribution" class="img-fluid">
+</div>
+{% endblock %}

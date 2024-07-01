@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(to right, #1C1C1C, #2C3E50);
+        background-attachment: fixed;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+    }
+    .navbar {
+        background-color: rgba(44, 62, 80, 0.9);
+    }
+    .navbar-brand {
+        color: #ECF0F1 !important;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .nav-link {
+        color: #ECF0F1 !important;
+    }
+    .nav-link:hover {
+        color: #3498DB !important;
+    }
+    .container {
+        max-width: 800px;
+        margin-top: 100px;
+    }
+    .card {
+        border: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        text-align: center;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    p {
+        color: #ECF0F1;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+    .btn-primary {
+        background-color: #3498DB;
+        border-color: #3498DB;
+        transition: background-color 0.3s, border-color 0.3s;
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+    .btn-primary:hover {
+        background-color: #2980B9;
+        border-color: #2980B9;
+    }
+    .logo {
+        height: 50px;
+        margin-right: 10px;
+    }
+</style>
+<!-- Include Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="/">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+        Mental Health Assistant
+    </a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="card">
+        <h1>Welcome to the Mental Health Assistant</h1>
+        <p>Your personal mental health assistant to help track your mood, find resources, and get support.</p>
+        <a href="{{ url_for('login') }}" class="btn btn-primary mt-3">Get Started</a>
+    </div>
+</div>
+{% endblock %}

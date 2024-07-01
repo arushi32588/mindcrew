@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Resources{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(to right, #1C1C1C, #2C3E50);
+        background-attachment: fixed;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+    }
+    .card {
+        margin-bottom: 20px;
+        border: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 10px;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+        font-weight: 600;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 0.5px;
+    }
+    .form-control, .btn-primary {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ECF0F1;
+    }
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .btn-primary {
+        background-color: #3498DB;
+        border-color: #3498DB;
+        transition: background-color 0.3s, border-color 0.3s;
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+    .btn-primary:hover {
+        background-color: #2980B9;
+        border-color: #2980B9;
+    }
+    .dashboard-header, .subheader {
+        text-align: center;
+    }
+    .dashboard-header {
+        margin-bottom: 15px;
+        color: #ECF0F1;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+    }
+    .subheader {
+        margin-bottom: 30px;
+        color: #ECF0F1;
+        font-size: 1.5rem;
+    }
+    .resource-item {
+        margin-bottom: 15px;
+    }
+    .resource-item a {
+        text-decoration: none;
+        color: #3498DB;
+    }
+    .resource-item a:hover {
+        text-decoration: underline;
+        color: #2980B9;
+    }
+    .resource-card {
+        border-radius: 10px;
+        padding: 15px;
+        transition: box-shadow 0.3s ease-in-out;
+        background: rgba(44, 62, 80, 0.8);
+        backdrop-filter: blur(10px);
+        color: #ECF0F1;
+    }
+    .resource-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .resource-title {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    .resource-url {
+        font-size: 0.875rem;
+        color: #BDC3C7;
+    }
+</style>
+<!-- Include Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="dashboard-header">Mental Health Resources</h1>
+    <h5 class="subheader">Access valuable resources to support your mental health journey</h5>
+    <div id="resources-list" class="row">
+        <!-- Resources will be loaded here -->
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/resources/get')
+            .then(response => response.json())
+            .then(data => {
+                const resourcesList = document.getElementById('resources-list');
+                data.forEach(resource => {
+                    const resourceItem = document.createElement('div');
+                    resourceItem.className = 'col-md-6 col-lg-4 resource-item';
+                    resourceItem.innerHTML = `
+                        <div class="resource-card">
+                            <div class="resource-title">${resource.title}</div>
+                            <div class="resource-url"><a href="${resource.url}" target="_blank">${resource.url}</a></div>
+                        </div>
+                    `;
+                    resourcesList.appendChild(resourceItem);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}
