@@ -4,3 +4,9 @@ requests
 pandas
 matplotlib
 nltk
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Login
+google-generativeai
+Flask-Session
+scikit-learn

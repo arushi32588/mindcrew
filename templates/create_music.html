@@ -90,49 +90,24 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="dashboard-header">Create Music</h1>
-    <h5 class="subheader">Generate custom music based on your preferences</h5>
-    <div class="card">
-        <div class="card-body">
-            <form method="POST">
-                <div class="form-group">
-                    <label for="music_style" class="form-label">Music Style</label>
-                    <input type="text" class="form-control" id="music_style" name="music_style" placeholder="Enter music style..." required>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Create Music</h2>
                 </div>
-                <div class="form-group">
-                    <label for="mood" class="form-label">Mood</label>
-                    <input type="text" class="form-control" id="mood" name="mood" placeholder="Enter mood..." required>
+                <div class="card-body">
+                    <div class="alert alert-info text-center">
+                        <h4>Feature Temporarily Unavailable</h4>
+                        <p>We're currently updating our music generation service to provide you with a better experience.</p>
+                        <p>Please check back soon for this exciting feature!</p>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title..." required>
-                </div>
-                <div class="form-group">
-                    <label for="make_instrumental" class="form-label">Make Instrumental</label>
-                    <select class="form-control" id="make_instrumental" name="make_instrumental" required>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Generate Music</button>
-            </form>
+            </div>
         </div>
     </div>
-    {% if music %}
-    <div class="generated-music-container">
-        <h2 class="music-title">Generated Music</h2>
-        <h3 class="music-title">Lyrics:</h3>
-        <pre class="generated-lyrics">{{ lyrics }}</pre>
-        {% if music.error %}
-            <p class="text-danger">{{ music.error }}</p>
-        {% else %}
-            <audio controls>
-                <source src="{{ music }}" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        {% endif %}
-    </div>
-    {% endif %}
-    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</a>
 </div>
 {% endblock %}

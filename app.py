@@ -41,6 +41,7 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -48,19 +49,27 @@ def login():
         if user and user.password == password:
             login_user(user)
             return redirect(url_for('dashboard'))
-    return render_template('login.html')
+        else:
+            error = 'Invalid username or password'
+    return render_template('login.html', error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    error = None
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        new_user = User(username=username, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('dashboard'))
-    return render_template('register.html')
+        if User.query.filter_by(username=username).first():
+            error = 'Username already exists'
+        else:
+            new_user = User(username=username, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect(url_for('dashboard'))
+    return render_template('register.html', error=error)
+
+
 
 @app.route('/dashboard')
 @login_required
@@ -114,13 +123,6 @@ def exercises():
 @app.route('/create_music', methods=['GET', 'POST'])
 @login_required
 def create_music():
-    if request.method == 'POST':
-        music_style = request.form.get('music_style')
-        mood = request.form.get('mood')
-        title = request.form.get('title')
-        make_instrumental = request.form.get('make_instrumental') == 'true'
-        music, lyrics = generate_music(music_style, mood, title, make_instrumental)
-        return render_template('create_music.html', music=music, lyrics=lyrics, music_style=music_style, mood=mood, title=title, make_instrumental=make_instrumental)
     return render_template('create_music.html')
 
 # New route for logout
@@ -148,34 +150,59 @@ def clean_response(text):
     return clean_text
 
 def generate_music(music_style, mood, title, make_instrumental):
-    # Generate lyrics based on the mood
-    lyrics_url = os.environ.get("SUNO_API_URL_LYRICS", "http://localhost:3000/api/generate_lyrics")
-    lyrics_payload = {"prompt": f"A {mood} {music_style} song titled '{title}'"}
-    lyrics_response = requests.post(lyrics_url, json=lyrics_payload)
-    lyrics_response.raise_for_status()
-    lyrics = lyrics_response.json()["text"]
-
-    # Generate music based on the lyrics
-    url = os.environ.get("SUNO_API_URL", "http://localhost:3000/api/custom_generate")
-    payload = {
-        "prompt": lyrics,
-        "tags": music_style,
-        "title": title,
-        "make_instrumental": make_instrumental,
-        "wait_audio": True  # Synchronous mode
-    }
-    headers = {'Content-Type': 'application/json'}
     try:
+        # Generate lyrics based on the mood
+        lyrics_url = os.environ.get("SUNO_API_URL_LYRICS", "http://localhost:3000/api/generate_lyrics")
+        lyrics_payload = {"prompt": f"A {mood} {music_style} song titled '{title}'"}
+        print(f"Sending lyrics request to {lyrics_url} with payload: {lyrics_payload}")
+        lyrics_response = requests.post(lyrics_url, json=lyrics_payload)
+        lyrics_response.raise_for_status()
+        
+        # Check if the response has the expected structure
+        response_data = lyrics_response.json()
+        if not isinstance(response_data, dict):
+            raise ValueError(f"Unexpected response format: {response_data}")
+        
+        lyrics = response_data.get("text")
+        if not lyrics:
+            raise ValueError(f"No lyrics found in response: {response_data}")
+
+        # Generate music based on the lyrics
+        url = os.environ.get("SUNO_API_URL", "http://localhost:3000/api/custom_generate")
+        payload = {
+            "prompt": lyrics,
+            "tags": music_style,
+            "title": title,
+            "make_instrumental": make_instrumental,
+            "wait_audio": True  # Synchronous mode
+        }
+        headers = {'Content-Type': 'application/json'}
+        
+        print(f"Sending music generation request to {url} with payload: {payload}")
         response = requests.post(url, json=payload, headers=headers)
         response.raise_for_status()
         
         response_json = response.json()
-        audio_url = response_json[0]["audio_url"]
+        if not isinstance(response_json, list) or not response_json:
+            raise ValueError(f"Unexpected music response format: {response_json}")
+            
+        audio_url = response_json[0].get("audio_url")
+        if not audio_url:
+            raise ValueError(f"No audio URL found in response: {response_json}")
+            
         return audio_url, lyrics
+        
     except requests.exceptions.RequestException as e:
-        return {"error": f"Failed to generate music: {e}"}, lyrics
-    except KeyError as e:
-        return {"error": f"Unexpected response structure: {e}"}, lyrics
+        print(f"Request error: {str(e)}")
+        if hasattr(e.response, 'text'):
+            print(f"Response text: {e.response.text}")
+        return {"error": f"Failed to generate music: {str(e)}"}, "Error generating lyrics"
+    except (ValueError, KeyError) as e:
+        print(f"Data processing error: {str(e)}")
+        return {"error": f"Error processing response: {str(e)}"}, "Error processing response"
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        return {"error": f"Unexpected error: {str(e)}"}, "Error occurred"
 
 
 if __name__ == '__main__':

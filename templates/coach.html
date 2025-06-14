@@ -82,6 +82,7 @@
 </style>
 <!-- Include Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -90,11 +91,12 @@
     <h5 class="subheader">Describe your symptoms and get personalized advice</h5>
     <div class="card">
         <div class="card-body">
-            <form method="POST">
+            <form id="coach-form" method="POST">
                 <div class="form-group">
                     <label for="symptoms" class="form-label">Describe your symptoms</label>
                     <textarea class="form-control" id="symptoms" name="symptoms" rows="3" placeholder="Enter your symptoms here..."></textarea>
                 </div>
+                <button type="button" id="voice-btn" class="btn btn-secondary mt-3">🎤</button>
                 <button type="submit" class="btn btn-primary mt-3">Get Advice</button>
             </form>
         </div>
@@ -107,6 +109,58 @@
         <p>{{ advice }}</p>
     </div>
     {% endif %}
-    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</a>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</div>
 </div>
+
+<script>
+    function sendSymptoms(symptoms) {
+        fetch('/coach', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ symptoms: symptoms })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const adviceContainer = document.querySelector('.advice-container');
+            adviceContainer.innerHTML = `
+                <h4 class="advice-title">Your Symptoms:</h4>
+                <p>${data.symptoms}</p>
+                <h4 class="advice-title">Advice:</h4>
+                <p>${data.advice}</p>
+            `;
+            readOutLoud(data.advice);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function readOutLoud(message) {
+        const speech = new SpeechSynthesisUtterance();
+        speech.text = message;
+        speech.volume = 1;
+        speech.rate = 1;
+        speech.pitch = 1;
+        window.speechSynthesis.speak(speech);
+    }
+
+    if (annyang) {
+        annyang.setLanguage('en-US');
+        annyang.addCallback('result', function(phrases) {
+            const symptoms = phrases[0];
+            document.getElementById('symptoms').value = symptoms;
+            sendSymptoms(symptoms);
+        });
+
+        document.getElementById('voice-btn').addEventListener('click', function() {
+            if (annyang.isListening()) {
+                annyang.abort();
+                this.textContent = '🎤';
+            } else {
+                annyang.start();
+                this.textContent = '🛑';
+            }
+        });
+    }
+</script>
 {% endblock %}

@@ -96,6 +96,7 @@
 </style>
 <!-- Include Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -107,17 +108,14 @@
     </div>
     <form id="chat-form" class="form-inline mt-4">
         <input type="text" id="message" name="message" class="form-control mr-2" placeholder="Type your message here" required>
-        <button type="submit" class="btn btn-primary">Send</button>
+        <button type="submit" class="btn btn-primary ml-2">Send</button>
+        <button type="button" id="voice-btn" class="btn btn-secondary ml-2">🎤</button>
     </form>
     <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">Back to Dashboard</a>
 </div>
 
 <script>
-    document.getElementById('chat-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const message = document.getElementById('message').value;
-        document.getElementById('message').value = '';
-
+    function sendMessage(message) {
         fetch('/chat_support/message', {
             method: 'POST',
             headers: {
@@ -131,8 +129,46 @@
             chatBox.innerHTML += '<div class="chat-message user"><strong>You:</strong> ' + message + '</div>';
             chatBox.innerHTML += '<div class="chat-message bot"><strong>Bot:</strong> ' + data.response + '</div>';
             chatBox.scrollTop = chatBox.scrollHeight;
+            readOutLoud(data.response);
         })
         .catch(error => console.error('Error:', error));
+    }
+
+    function readOutLoud(message) {
+        const speech = new SpeechSynthesisUtterance();
+        speech.text = message;
+        speech.volume = 1;
+        speech.rate = 1;
+        speech.pitch = 1;
+        window.speechSynthesis.speak(speech);
+    }
+
+    if (annyang) {
+        annyang.setLanguage('en-US');
+        annyang.addCallback('result', function(phrases) {
+            const message = phrases[0];
+            document.getElementById('message').value = message;
+            sendMessage(message);
+        });
+
+        document.getElementById('voice-btn').addEventListener('click', function() {
+            if (annyang.isListening()) {
+                annyang.abort();
+                this.textContent = '🎤';
+            } else {
+                annyang.start();
+                this.textContent = '🛑';
+            }
+        });
+    }
+
+    document.getElementById('chat-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const message = document.getElementById('message').value;
+        if (message) {
+            sendMessage(message);
+            document.getElementById('message').value = '';
+        }
     });
 </script>
 {% endblock %}

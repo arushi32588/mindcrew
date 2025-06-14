@@ -1,4 +1,6 @@
-#!/Users/arushiagrawal/Desktop/Projects/AI_Mental_Health_Assistant/env/bin/python
+#!/bin/sh
+'''exec' "/Users/arushiagrawal/Desktop/Projects/AI_Mental_Health_Assistant /env/bin/python" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

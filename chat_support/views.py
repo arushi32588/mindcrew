@@ -12,7 +12,7 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 def generate_response(prompt):
     messages = [
-        {"role": "user", "parts": [{"text": "You are a chatbot for answering mental health related queries. Do not provide emotional support, diagnosis or help. Just Answer questions only related to mental health using the following context. Your mission is to excel as a conversational chatbot, specializing in mental health-related inquiries while embracing empathy and understanding."}]}
+        {"role": "user", "parts": [{"text": "You are a supportive chatbot for mental health queries. Provide clear, informative, and empathetic responses. Focus on answering questions related to mental health without offering medical advice or emotional support. Use a friendly and understanding tone to make users feel comfortable."}]}
     ]
     
     # Check if there's previous context in the session
